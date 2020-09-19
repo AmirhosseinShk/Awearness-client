@@ -1,0 +1,107 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+      <a class="navbar-brand" href="#/topology" style="float: right;">سامانه تشخیص گراف حمله</a>
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+           <span class="sr-only">Toggle navigation</span>
+           <span class="icon-bar"></span>
+           <span class="icon-bar"></span>
+           <span class="icon-bar"></span>
+         </button>
+       </div>
+        <div id="navbar" class="navbar-collapse collapse" style="float: right;"> 
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#/attackPath">مسیر حمله</a></li>            
+            <li><a href="#/attackGraph">گراف حمله</a></li>
+            <li><a href="#/topology.html">توپولوژی شبکه</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+</nav>
+
+
+<br/><br/><br/>
+
+<div class="col-md-12">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <strong>چگونه این قسمت برنامه کار میکند؟</strong>
+    </div>
+
+    <div class="panel-body">
+      <p>در این صفحه مسیر حمله نمایش داده می شود</p> 
+      <p>شما میتوانید مسیر های مختلف حمله را از قسمت <em>"مسیر حمله"</em> انتخاب نمایید</p>
+      <p>درجه حساسیت و اهمیت حمله نیز در قسمت <em>"درجه حساسیت"</em> مشخص میشود</p>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-9" style="float: right;">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <form name="myForm">
+        <strong>مسیر حمله</strong>
+        <span class="tabulation"> <label><input type="radio" ng-model="view.status" value="Logical" checked="checked">Logical</label></span>
+        <span class="tabulation"> <label><input type="radio" ng-model="view.status" value="Topological">Topological</label></span>
+      </form>
+    </div><!-- panel heading -->
+
+    <div class="panel-body">
+      <div ng-switch="view.status">
+        <div ng-switch-default="Topological">
+          <div class="attack-graph" ng-controller="attackPathTopologicalController" graph-topo-drawing></div>
+        </div><!-- Topological -->
+        <div ng-switch-when="Logical">
+          <div class="attack-graph"  graph-drawing></div>
+        </div><!-- Logical -->
+      </div>
+    </div><!-- panel body -->
+  </div><!-- panel default -->
+</div><!-- col md 9 -->
+
+
+<div class="col-md-3">
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <p>مسیر حمله</p>
+    </div><!-- panel heading -->
+    <div class="panel-body" class="texte">
+      <p>شماره حمله: <select ng-model="valSelecter" ng-options="item.Value for item in tab" ng-click="appel(valSelecter)"> </select> </p>
+    </div><!-- panel body -->
+  </div><!-- panel default -->	
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <p>درجه حساسیت</p>
+    </div><!-- panel heading -->
+    <div id="selected" class="panel-body">
+      <p style="text-align:center">
+        <span ng-class="{green: graphes.color == 'green', yellow: graphes.color == 'yellow', orange: graphes.color == 'orange', red: graphes.color == 'red', black: 			graphes.color == 'black'}"><b>{{ graphes.text }}</b></span>
+      </p>
+    </div><!-- panel body -->
+  </div><!-- panel default -->
+
+  <div class="panel panel-default">
+    <div ng-switch="view.status">
+
+      <div ng-switch-when="Topological">
+        <div class="panel-body">
+         <div><IMG src="img/pirate.png"><p><strong>حمله کننده</strong></p></div>
+          <div><IMG src="img/target.png"><p><strong>هدف</strong></p></div>
+        </div><!-- panel body -->
+      </div><!-- ng switch -->
+
+      <div ng-switch-when="Logical">
+        <div class="panel-body">
+          <div id="vulnerability"></div><p><strong>آسیب پذیری</strong></p>
+          <div id="leaf"></div><p><strong>برگ</strong></p>  
+          <div id="and"></div><p><strong>عملوند عطفی</strong></p>
+          <div id="or"></div><p><strong>عملوند فصلی</strong></p>
+        </div>
+      </div>
+
+   </div><!-- ng-switch -->
+ </div><!-- panel panel default -->
+
+</div>

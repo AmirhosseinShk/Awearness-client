@@ -1,0 +1,146 @@
+@import url("fontiran.css");
+body {
+  background-color: lightgrey;
+  direction : rtl;
+  font-family: IRANSans;
+  font-weight:200;
+
+}
+svg{
+  background-color: white;
+}
+.node{
+ stroke: #fff;
+ stroke-width: 1.5px;
+}
+.link{
+ stroke: #999;
+ stroke-opacity: .6.;
+}
+.tabulation{
+ margin: 3em;
+}
+.attack-graph{
+  height: 500px;
+  overflow-y: scroll;
+}
+#config{
+  height: 600px;
+  overflow-y:scroll;
+}
+#tot_remed{
+  height: 400px;
+  overflow-y:scroll;
+}
+#remediation_panel{
+  height: 75px;
+  overflow-y: scroll;
+}
+.green{
+  color: green;
+  font-size: 25px;
+}
+.yellow{
+  color: yellow;
+  background-color: black;
+  font-size: 25px;
+}
+.orange{
+  color: orange;
+  background-color: black;
+  font-size: 25px;
+}
+.red{
+  color: red;
+  background-color: black;
+  font-size: 25px;
+}
+.black{
+  color: black;
+  background-color: white;
+  font-size: 25px;
+}
+#vulnerability{
+  background: red;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  float:left;
+  margin-right:10px;
+}
+#leaf{
+  background: orange;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  float:left;
+  margin-right:10px;
+}
+#and{
+  background: blue;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  float:left;
+  margin-right:10px;
+}
+#or{
+  background: lightblue;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  float:left;
+  margin-right:10px;
+}
+#vulnerabilityCorrected{
+  background: red;
+  border : 3px solid green;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  float:left;
+  margin-right:10px;
+}
+#leafCorrected{
+  background: orange;
+  border : 3px solid green;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  float:left;
+  margin-right:10px;
+}
+#andCorrected{
+  background: blue;
+  border : 3px solid green;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  float:left;
+  margin-right:10px;
+}
+#orCorrected{
+  background: lightblue;
+  border : 3px solid green;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  float:left;
+  margin-right:10px;
+}
+#wholesome{
+  background: lightgrey;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  float:left;
+  margin-right:10px;
+}
+#attacked{
+  background: red;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  float:left;
+  margin-right:10px;
+}

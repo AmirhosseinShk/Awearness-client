@@ -1,0 +1,47 @@
+.editable-cell {
+  border: none;
+  background-color: inherit;
+}
+.container {
+  position:relative;
+}
+.context-menu {
+  position: absolute;
+}
+.context-menu .dropdown-menu {
+  display:block;
+  position:static;
+}
+
+input.editable-cell{
+  padding-left: 5px;
+  width: 100%;
+  height: 100%;
+}
+input.editable-cell:focus {
+  outline: 1px solid #777;
+}
+.spreadsheet-container {
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+}
+.spreadsheet.table{
+  height: auto;
+}
+.spreadsheet th.col, .spreadsheet td.col{
+  padding: 0;
+  min-width: 90px;
+  width: 120px;
+}
+.spreadsheet .col-sno{
+  min-width: 30px;
+  background-color: #EEE;
+}
+.spreadsheet.table .col-sno{
+  width: 20px;
+  background-color: #EEE;
+}
+.spreadsheet.table .row-header{
+  background-color: #EEE;
+}
