@@ -180,13 +180,10 @@ routeAppControllers.controller('attackPathTopologicalController', function ($sco
                 $http.get(myConfig.url + "/attack_graph")
                     .then(function(attackGraph){
                         $scope.attack_graph = transformGraph(attackGraph.data);
-
                         var defaultPath = 0;
-
                         var topological = $http.get(myConfig.url + "/attack_path/" + defaultPath + "/topological")
                             .then(function(data) {
                                 $scope.callTopoGraph($scope.valSelecter.ID);
-
                                 // Default value in selecter
                                 $scope.valSelecter = $scope.tab[0];
                             }, function(){alert("Loading of default topological attack path failed.")})
