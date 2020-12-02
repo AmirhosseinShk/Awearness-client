@@ -1,7 +1,7 @@
 /**
 *	Defines dependencies
 */
-var myApp = angular.module('Awearness', ['routeAppControllers', 'ngRoute', 'ngRadialGauge', 'myModule', 'angularFileUpload']);
+var myApp = angular.module('Awearness', ['routeAppControllers', 'ngRoute', 'ngRadialGauge', 'myModule', 'angularFileUpload' , 'ngMaterial', 'ngMessages']);
 
 
 /**

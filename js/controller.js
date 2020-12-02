@@ -1,64 +1,75 @@
 /*   Attack Path Controller
-*   @param $scope
-*   @param $http
-*   @param myConfig
-*
-*   Retrieve attack path from server whit GET request.
-*/
+ *   @param $scope
+ *   @param $http
+ *   @param myConfig
+ *
+ *   Retrieve attack path from server whit GET request.
+ */
 
 routeAppControllers.controller('attackPathController', function ($scope, $http, myConfig, serviceTest) {
 
     var defaultPath = {
-        ID : 0,
-        Value : 1
+        ID: 0,
+        Value: 1
     };
 
     // Defautl view : logical
     $scope.view = {
-        status : "Logical"
+        status: "Logical"
     };
     $scope.valueGauge = 0;
 
     // Function available in $scope, to begin the procedure
-    $scope.init = function(){
+    $scope.init = function () {
 
         $http.get(myConfig.url + "/host/list")
-            .then(function(host){
+            .then(function (host) {
                 $scope.listHosts = host.data;
-            }, function(){alert("Loading of host list failed.")});
+            }, function () {
+                alert("Loading of host list failed.")
+            });
 
         // Request the number of path
         var number = $http.get(myConfig.url + "/attack_path/number")
-            .then(function(valNumber) {
+            .then(function (valNumber) {
                 $scope.items = valNumber.data;
 
                 $scope.tab = [];
 
-                for(var i=1; i <= $scope.items.number; ++i){
-                    $scope.tab[i-1] = {"ID" : i-1, "Value" : i};
+                for (var i = 1; i <= $scope.items.number; ++i) {
+                    $scope.tab[i - 1] = {
+                        "ID": i - 1,
+                        "Value": i
+                    };
                 }
 
                 var graph = $http.get(myConfig.url + "/attack_graph")
-                    .then(function(valGraph) {
+                    .then(function (valGraph) {
 
                         $scope.attack_graph = transformGraph(valGraph.data);
 
                         $scope.valSelecter = $scope.tab[defaultPath.ID];
-                        $scope.appel(defaultPath);   
-                    }, function(){alert("Loading of attack graph failed.")})
-            }, function(){alert("Loading of attack paths failed.")})
-    };   
+                        $scope.appel(defaultPath);
+                    }, function () {
+                        alert("خطا در بارگزاری گراف حمله")
+                    })
+            }, function () {
+                alert("خطا در بارگزاری مسیر حمله")
+            })
+    };
 
-    $scope.appel = function(numb){
+    $scope.appel = function (numb) {
 
         $http.get(myConfig.url + "/attack_path/" + numb.ID)
-            .then(function(graph){
+            .then(function (graph) {
                 var pathGraph = transformPath(graph.data, $scope.attack_graph);
-		console.log(pathGraph);
+                console.log(pathGraph);
                 $scope.graphes = pathGraph;
-            }, function(){alert("Loading of attack path" + numb.ID + " failed.")})
+            }, function () {
+                alert("خطا در بارگزاری مسیر حمله شماره" + numb.ID)
+            })
     };
-    
+
 
 
 });
@@ -66,12 +77,12 @@ routeAppControllers.controller('attackPathController', function ($scope, $http, 
 // ****************************************************
 
 /**
-*   Gauge Controller
-*   @param $scope
-*
-*   Initialize data from gauge
-*/
-routeAppControllers.controller("RadialGaugeDemoCtrl", function($scope){
+ *   Gauge Controller
+ *   @param $scope
+ *
+ *   Initialize data from gauge
+ */
+routeAppControllers.controller("RadialGaugeDemoCtrl", function ($scope) {
 
     $scope.value = $scope.valueGauge;
     $scope.upperLimit = 100;
@@ -79,11 +90,31 @@ routeAppControllers.controller("RadialGaugeDemoCtrl", function($scope){
     $scope.unit = "";
     $scope.precision = 1;
     $scope.ranges = [
-        {min: 0, max: 20, color: '#008000'},
-        {min: 20, max: 40, color: '#FFFF00'},
-        {min: 40, max: 60, color: '#FFA500'},
-        {min: 60, max: 80, color: '#FF0000'},
-        {min: 80, max: 100, color: '#000000'}
+        {
+            min: 0,
+            max: 20,
+            color: '#008000'
+        },
+        {
+            min: 20,
+            max: 40,
+            color: '#FFFF00'
+        },
+        {
+            min: 40,
+            max: 60,
+            color: '#FFA500'
+        },
+        {
+            min: 60,
+            max: 80,
+            color: '#FF0000'
+        },
+        {
+            min: 80,
+            max: 100,
+            color: '#000000'
+        }
     ];
 });
 
@@ -91,323 +122,409 @@ routeAppControllers.controller("RadialGaugeDemoCtrl", function($scope){
 // ****************************************************
 
 /**
-*   Attack Graph Controller
-*   @param $scope
-*   @param $http
-*   @param myConfig
-*
-*   Retrieve data from server
-*/
+ *   Attack Graph Controller
+ *   @param $scope
+ *   @param $http
+ *   @param myConfig
+ *
+ *   Retrieve data from server
+ */
 routeAppControllers.controller('attackGraphController', function ($scope, $http, myConfig) {
 
     $scope.view = {
-        status : "Topological"
-    };   
+        status: "Topological"
+    };
 
-    $scope.init = function(){
+    $scope.init = function () {
 
         $http.get(myConfig.url + "/attack_path/number")
-            .then(function(valNumber) {
+            .then(function (valNumber) {
                 $scope.items = valNumber.data;
 
                 var list = $http.get(myConfig.url + "/attack_path/list")
-                    .then(function(valList) {
+                    .then(function (valList) {
                         $scope.tab = valList.data;
-                    }, function(){alert("Loading of attach path list failed.")});
+                    }, function () {
+                        alert("خطا در بارگزاری مسیر حمله")
+                    });
 
                 var graph = $http.get(myConfig.url + "/attack_graph")
-                    .then(function(valGraph) {
+                    .then(function (valGraph) {
                         $scope.graphes = transformGraph(valGraph.data);
-                    }, function(){alert("Loading of attach graph failed.")})
-            }, function(){alert("Loading of number of attack paths failed.")})
-    };   
+                    }, function () {
+                        alert("خطا در بارگزاری مسیر حمله")
+                    })
+            }, function () {
+                alert("خطا در بارگزاری مسیر حمله")
+            })
+    };
 });
 
 
 // ****************************************************
 
 /**
-*   Attack Graph Topological Controller
-*   @param $scope
-*   @param $http
-*   @param myConfig
-*
-*   Retrieve data from server
-*/
+ *   Attack Graph Topological Controller
+ *   @param $scope
+ *   @param $http
+ *   @param myConfig
+ *
+ *   Retrieve data from server
+ */
 routeAppControllers.controller('attackGraphTopologicalController', function ($scope, $http, myConfig) {
 
-    $scope.init = function(){
+    $scope.init = function () {
 
         var topological = $http.get(myConfig.url + "/attack_graph/topological")
-            .then(function(data) {
-		console.log(data);
+            .then(function (data) {
+                console.log(data);
                 $scope.graphes = transformGraphTopo(data.data);
-            }, function(){alert("Loading of topological attack graph failed.")})    
-    };   
+            }, function () {
+                alert("خطا در بارگزاری گراف حمله")
+            })
+    };
 });
 
 
 // ****************************************************
 
 /**
-*   Attack Path Topological Controller
-*   @param $scope
-*   @param $http
-*   @param myConfig
-*
-*   Retrieve data from server
-*/
+ *   Attack Path Topological Controller
+ *   @param $scope
+ *   @param $http
+ *   @param myConfig
+ *
+ *   Retrieve data from server
+ */
 routeAppControllers.controller('attackPathTopologicalController', function ($scope, $http, myConfig) {
 
     $scope.view = {
-        status : "Logical"
+        status: "Logical"
     };
-    
-    $scope.init = function(){
+
+    $scope.init = function () {
 
         var number = $http.get(myConfig.url + "/attack_path/number")
-            .then(function(valNumber){
+            .then(function (valNumber) {
                 var numberPath = valNumber.data;
 
                 // Array of value for the list
                 $scope.tab = [];
 
                 // Fill the tab with ID and Values
-                for(var i=1; i <= numberPath.number; ++i){
-                    $scope.tab[i-1] = {"ID" : i-1, "Value" : i};
+                for (var i = 1; i <= numberPath.number; ++i) {
+                    $scope.tab[i - 1] = {
+                        "ID": i - 1,
+                        "Value": i
+                    };
                 }
 
                 $http.get(myConfig.url + "/attack_graph")
-                    .then(function(attackGraph){
+                    .then(function (attackGraph) {
                         $scope.attack_graph = transformGraph(attackGraph.data);
                         var defaultPath = 0;
                         var topological = $http.get(myConfig.url + "/attack_path/" + defaultPath + "/topological")
-                            .then(function(data) {
+                            .then(function (data) {
                                 $scope.callTopoGraph($scope.valSelecter.ID);
                                 // Default value in selecter
                                 $scope.valSelecter = $scope.tab[0];
-                            }, function(){alert("Loading of default topological attack path failed.")})
-                    }, function(){alert("Loading of attack graph failed.")})
-            }, function(){alert("Loading number of attack paths failed.")})
-    };   
+                            }, function () {
+                                alert("خطا در بارگزاری گراف حمله")
+                            })
+                    }, function () {
+                        alert("خطا در بارگزاری گراف حمله")
+                    })
+            }, function () {
+                alert("خطا در بارگزاری گراف حمله")
+            })
+    };
 
-    $scope.callTopoGraph = function(value){
+    $scope.callTopoGraph = function (value) {
         $http.get(myConfig.url + "/attack_path/" + value + "/topological")
-            .then(function(graphTopo){
+            .then(function (graphTopo) {
                 $scope.graphes = transformPathTopo(graphTopo.data, $scope.attack_graph);
-            }, function(){alert("Loading of a topological attack path failed.")})
+            }, function () {
+                alert("Loading of a topological attack path failed.")
+            })
     }
 });
 
 // ****************************************************
 /**
-*   Topology Controller
-*   @param $scope
-*   @param $document
-*   @param rootScope
-*   @param FileUploader
-*   @param myConfig
-*   get inputs from user for design attackGraph
-*/
+ *   Topology Controller
+ *   @param $scope
+ *   @param $document
+ *   @param rootScope
+ *   @param FileUploader
+ *   @param myConfig
+ *   get inputs from user for design attackGraph
+ */
 
-routeAppControllers.controller('topologyController', function($scope, $document, $rootScope , FileUploader , myConfig){	
-  //initialize headers
-  hostinterface = ["نام قطعه","نام رابط","آدرس آیپی","اتصال به نت","میزان اهمیت"];
-  flowmatrix = ["مبدا" , "مقصد" , "پورت مبدا" , "پورت مقصد" , "پروتکل"];
-  routing = ["نام قطعه" , "مقصد" , "Netmask" , "درگاه" , "رابط"];
-  vlans = ["نام" , "آدرس" , "رنج آیپی نهایی" , "درگاه"];
+routeAppControllers.controller('topologyController', function ($scope, $document, $rootScope, FileUploader, myConfig, $http) {
+    //initialize headers
+    hosts = ["نام قطعه", "نام رابط", "آدرس آیپی", "اتصال به نت", "میزان اهمیت"];
+    networkfirewall = ["مبدا", "مقصد", "پورت مبدا", "پورت مقصد", "پروتکل"];
+    routing = ["نام قطعه", "مقصد", "Netmask", "درگاه", "رابط"];
+    vlans = ["نام", "آدرس", "رنج آیپی نهایی", "درگاه"];
+    hostsRecords = [];
+    vlansRecords = [];
+    firewallRecords = [];
+    routingRecords = [];
 
-  var hideContextMenu = function() {
+    var hideContextMenu = function () {
+        $scope.isContextMenuVisible = false;
+        if (!$rootScope.$$phase) {
+            $rootScope.$apply();
+        }
+    };
+
+    $scope.numRows = 0;
+    $scope.numColumns = 0;
+    records = [];
+    devices = ["linux-1" , "linux-2"];
+    headers = hosts;
     $scope.isContextMenuVisible = false;
-    if (!$rootScope.$$phase) {
-      $rootScope.$apply();
+    $scope.contextmenuRowIndex = -1;
+    $scope.contextmenuColumnIndex = -1;
+
+    $scope.ExportCSV = function () {
+        var isHost = false;
+        var hostDevices = [];
+        // save information
+        switch ($scope.item) {
+            case "hosts":
+                hostsRecords = records.slice();
+                console.log("heeereee");
+                isHost = true;
+                break;
+            case "vlans":
+                vlansRecords = records.slice();
+                break;
+            case "routing":
+                firewallRecords = records.slice();
+                break;
+            case "network-firewall":
+                routingRecords = records.slice();
+                break;
+        };
+        var csvString = $scope.item + "\n";
+        for (var i = 0; i < records.length; i++) {
+            var rowData = records[i];
+            if(isHost){
+                hostDevices.push(rowData[0]);
+            }
+            for (var j = 0; j < rowData.length; j++) {
+                csvString = csvString + rowData[j].value + ",";
+            }
+            csvString = csvString.substring(0, csvString.length - 1);
+            csvString = csvString + "\n";
+        }
+        csvString = csvString.substring(0, csvString.length - 1);
+        console.log(csvString);
+        setDeviceTools(hostDevices);
+        callInitilizeService(csvString);
+    };
+    
+    function setDeviceTools(data){
+        console.log(data);
+        devices = data.slice();
     }
-  };
 
-  $scope.numRows = 0;
-  $scope.numColumns = 0;
-  item = "hostinterface";
-  records = [];
-  headers = hostinterface;
-  $scope.isContextMenuVisible = false;
-  $scope.contextmenuRowIndex = -1;
-  $scope.contextmenuColumnIndex = -1;
+    function callInitilizeService(data) {
+        var sendData = $http.post(myConfig.url + "/initializeData", data)
+            .then(function (response) {
+                console.log(response);
+            }, function (response) {
+                console.log(response);
+            });
+        console.log(sendData);
+    };
 
-  $scope.ExportCSV = function(){
-    var csvString = headers.toString() + "\n";
-    for(var i=0 ; i < records.length ; i++){
-      var rowData = records[i];
-      for(var j=0 ; j < rowData.length ; j++){
-        csvString = csvString + rowData[j].value + ",";
-      }
-      csvString = csvString.substring(0,csvString.length - 1);
-      csvString = csvString + "\n";
-    }
-    csvString = csvString.substring(0, csvString.length - 1);
-    console.log(csvString);
-    saveTextAsFile(csvString , "test.csv");
-  };  
+    $scope.getrecords = function () {
+        return records;
+    };
 
+    $scope.getheaders = function () {
+        return headers;
+    };
 
- function saveTextAsFile (data, filename){
+    $scope.informationChange = function () {
+        switch ($scope.item) {
+            case "hosts":
+                headers = hosts;
+                if (hostsRecords.length > 0)
+                    records = hostsRecords;
+                break;
+            case "vlans":
+                headers = vlans;
+                if (vlansRecords.length > 0)
+                    records = vlansRecords;
+                break;
+            case "routing":
+                headers = routing;
+                if (routingRecords.length > 0)
+                    records = routingRecords;
+                break;
+            case "network-firewall":
+                headers = networkfirewall;
+                if (firewallRecords.length > 0)
+                    records = firewallRecords;
+                break;
+            default:
+                headers = hosts;
+                break;
+        };
+        $scope.init();
+        switch ($scope.item) {
+            case "hosts":
+                if (hostsRecords.length > 0)
+                    records = hostsRecords;
+                break;
+            case "vlans":
+                if (vlansRecords.length > 0)
+                    records = vlansRecords;
+                break;
+            case "routing":
+                if (routingRecords.length > 0)
+                    records = routingRecords;
+                break;
+            case "network-firewall":
+                if (firewallRecords.length > 0)
+                    records = firewallRecords;
+                break;
+        };
+    };
 
-        if(!data) {
-            console.error('Console.save: No data')
+    $scope.openContextMenu = function ($event, rowIndex, columnIndex) {
+        $event.preventDefault();
+
+        if ($event.button === 0) {
+            $scope.isContextMenuVisible = false;
             return;
         }
 
-        if(!filename) filename = 'console.json'
-
-        var blob = new Blob([data], {type: 'text/plain'}),
-            e    = document.createEvent('MouseEvents'),
-            a    = document.createElement('a')
-  if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-      window.navigator.msSaveOrOpenBlob(blob, filename);
-  }
-  else{
-      var e = document.createEvent('MouseEvents'),
-          a = document.createElement('a');
-
-      a.download = filename;
-      a.href = window.URL.createObjectURL(blob);
-      a.dataset.downloadurl = ['text/plain', a.download, a.href].join(':');
-      e.initEvent('click', true, false, window,
-          0, 0, 0, 0, 0, false, false, false, false, 0, null);
-      a.dispatchEvent(e);
-  }
-};
-
-  $scope.getrecords = function(){
-    return records;  
-  };
-  
-  $scope.getheaders = function(){
-    return headers;  
-  };
-
-  $scope.informationChange = function(){
-    switch($scope.item){
-    	case "hostinterface":
-	   headers = hostinterface;
-	break;
-	case "vlans":
-	   headers = vlans;
-	break;
-	case "routing":
-	   headers = routing;
-	break;
-	case "flowmatrix":
-	   headers = flowmatrix;
-	break;
-	default:
-	   headers = hostinterface;
-	break;
+        $scope.contextmenuRowIndex = rowIndex;
+        $scope.contextmenuColumnIndex = columnIndex;
+        $scope.isContextMenuVisible = true;
     };
-    $scope.init();
-  };
 
-  $scope.openContextMenu = function($event, rowIndex, columnIndex) {
-    $event.preventDefault();
-    
-    if ($event.button === 0) {
-      $scope.isContextMenuVisible = false;
-      return;
-    }
+    $scope.addRow = function () {
+        var i,
+            record,
+            cell,
+            index = $scope.contextmenuRowIndex;
 
-    $scope.contextmenuRowIndex = rowIndex;
-    $scope.contextmenuColumnIndex = columnIndex;
-    $scope.isContextMenuVisible = true;
-  };
-
-  $scope.addRow = function() {
-    var i,
-      record,
-      cell,
-      index = $scope.contextmenuRowIndex;
-
-    record = [];
-    for (i = 0; i < $scope.numColumns; i++) {
-      cell = {
-        value: ''
-      }
-      record.push(cell);
-    }
-
-    records.push(record);
-    $scope.isContextMenuVisible = false;
-    $scope.numRows = records.length;
-  };
-
-  $scope.removeRow = function() {
-    var index = $scope.contextmenuRowIndex;
-    records.splice(index, 1);
-    $scope.isContextMenuVisible = false;
-    $scope.numRows = records.length;
-  };
-
-
-  $scope.init = function() {
-    var i, j, column, cell;
-    var recordstemp = [],
-      record;
-    $scope.numRows = 2;
-    $scope.numColumns = headers.length;
-    for (i = 0; i < $scope.numRows; i++) {
-      record = [];
-      for (j = 0; j < $scope.numColumns; j++) {
-        cell = {
-          value: ''
+        record = [];
+        for (i = 0; i < $scope.numColumns; i++) {
+            cell = {
+                value: ''
+            }
+            record.push(cell);
         }
-        record.push(cell);
-      }
-      recordstemp.push(record);
+
+        records.push(record);
+        $scope.isContextMenuVisible = false;
+        $scope.numRows = records.length;
+    };
+
+    $scope.removeRow = function () {
+        var index = $scope.contextmenuRowIndex;
+        records.splice(index, 1);
+        $scope.isContextMenuVisible = false;
+        $scope.numRows = records.length;
+    };
+
+    // ************* SelectOptGroupController *************
+    $scope.selectedToppings = [];
+    $scope.printSelectedToppings = function printSelectedToppings() {
+        var numberOfToppings = this.selectedToppings.length;
+
+        // If there is more than one topping, we add an 'and'
+        // to be gramatically correct. If there are 3+ toppings
+        // we also add an oxford comma.
+        if (numberOfToppings > 1) {
+            var needsOxfordComma = numberOfToppings > 2;
+            var lastToppingConjunction = (needsOxfordComma ? ',' : '') + ' and ';
+            var lastTopping = lastToppingConjunction +
+                this.selectedToppings[this.selectedToppings.length - 1];
+            return this.selectedToppings.slice(0, -1).join(', ') + lastTopping;
+        }
+        return this.selectedToppings.join('');
+    };
+    
+    $scope.getDevices = function () {
+        return devices;
+    };
+    //************* call Test Product ***********
+    $scope.callInitilizeTestService = function() {
+     var callTest = $http.get(myConfig.url + "/initializeTest")
+            .then(function (response) {
+                console.log(response);
+            }, function (response) {
+                console.log(response);
+            });
+        console.log(callTest);
+    };
+    // ************ init Scope ******************
+    $scope.init = function () {
+        var i, j, column, cell;
+        var recordstemp = [],
+            record;
+        $scope.numRows = 2;
+        $scope.numColumns = headers.length;
+        for (i = 0; i < $scope.numRows; i++) {
+            record = [];
+            for (j = 0; j < $scope.numColumns; j++) {
+                cell = {
+                    value: ''
+                }
+                record.push(cell);
+            }
+            recordstemp.push(record);
+        }
+        records = recordstemp;
     }
-    records = recordstemp; 
-  }
-  $scope.init();
+    $scope.init();
 
 
-// **************** File Uploader **************
+    // **************** File Uploader **************
     var uploader = $scope.uploader = new FileUploader({
-        url: myConfig.url + "/initialize",
-        withCfentials : true
+        url: myConfig.url + "/initializeNessus",
+        withCfentials: true
     });
 
     // Callbaks
-    uploader.onAfterAddingFile = function(fileItem){
+    uploader.onAfterAddingFile = function (fileItem) {
         console.info('onAfterAddingFile', fileItem);
     };
-    uploader.onBeforeUploadItem =function(item){
+    uploader.onBeforeUploadItem = function (item) {
         console.info('onBeforeUploadItem', item);
     };
-    uploader.onProgressItem = function(fileItem, progress){
+    uploader.onProgressItem = function (fileItem, progress) {
         console.info('onProgressItem', fileItem, progress);
     };
-    uploader.onProgressAll = function(progress){
+    uploader.onProgressAll = function (progress) {
         console.info('onProgressAll', progress);
     };
-    uploader.onSuccessItem = function(fileItem, response, status, headers){
+    uploader.onSuccessItem = function (fileItem, response, status, headers) {
         console.info('onSuccessItem', fileItem, response, status, headers);
     };
-    uploader.onErrorItem = function(fileItem, response, status, headers){
+    uploader.onErrorItem = function (fileItem, response, status, headers) {
         console.info('onErrorItem', fileItem, response, status, headers);
-	alert("failed to upload the topology to \n " + myConfig.url + "/initialize");
+        alert("مشکلی در ایجاد گراف حمله وجود دارد.آدرس را بررسی نمایید\n " + myConfig.url + "/initialize");
     };
-    uploader.onCancelItem = function(fileItem, response, status, headers){
+    uploader.onCancelItem = function (fileItem, response, status, headers) {
         console.info('onCancelItem', fileItem, response, status, headers);
     };
-    uploader.onCompleteItem = function(fileItem, response, status, headers){
+    uploader.onCompleteItem = function (fileItem, response, status, headers) {
         console.info('onCompleteItem', fileItem, response, status, headers);
     };
-    uploader.onCompleteAll = function(){
+    uploader.onCompleteAll = function () {
         console.info('onCompleteAll');
         $scope.show = true;
-        alert("Attack graph generated. Ready for analysis.");
+        //   alert("گراف حمله ایجاد شد و آماده آنالیز میباشد.");
     };
-    console.info('uploader', uploader);
-
 });
-
 
 /*
 	//about topology Drawing
